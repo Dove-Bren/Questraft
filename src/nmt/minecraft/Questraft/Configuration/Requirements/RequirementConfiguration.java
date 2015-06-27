@@ -9,4 +9,8 @@ public abstract class RequirementConfiguration {
 	
 	public abstract void fromConfig(ConfigurationSection config);
 	
+	public static RequirementConfiguration parseConfig(ConfigurationSection config) {
+		return null;
+	}
+	
 }
