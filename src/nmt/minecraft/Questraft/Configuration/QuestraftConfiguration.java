@@ -184,10 +184,31 @@ public class QuestraftConfiguration {
 		}		
 		
 		if (config.contains("goals")) {
-			this.fame = config.getInt("fame");
+			goals = new LinkedList<GoalConfiguration>();
+			
+			GoalConfiguration cache;
+			for (String key : config.getConfigurationSection("goals").getKeys(false)) {
+				cache = new GoalConfiguration();
+				cache.fromConfig(config.getConfigurationSection("goals." + key));
+				goals.add(cache);
+			}
 		}
 		
+		if (config.contains("npcs")) {
+			npcs = new LinkedList<NPC>();
+			
+			for (String key : config.getConfigurationSection("npcs").getKeys(false)) {
+				npcs.add((NPC) config.get("npcs." + key));
+			}
+		}
 		
+		if (config.contains("start")) {
+			this.startNPC = (NPC) config.get("start");
+		}
+		
+//		if (config.contains("end")) {
+//			
+//		}
 		
 		
 		return true;
