@@ -1,8 +1,10 @@
 package nmt.minecraft.Questraft.Configuration;
 
+import org.bukkit.configuration.file.YamlConfiguration;
+
 public abstract class EndConfiguration {
 	
-	private String type;
+	protected String type;
 	
 	protected EndConfiguration(String type) {
 		this.type = type;
