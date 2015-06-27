@@ -6,8 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import nmt.minecraft.QuestManager.NPC.NPC;
-import nmt.minecraft.QuestManager.Quest.Goal;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 
@@ -30,7 +30,7 @@ public class QuestraftConfiguration {
 	
 	private List<ItemStack> rewards;
 	
-	private List<Goal> goals;
+	private List<GoalConfiguration> goals;
 	
 	private List<NPC> npcs;
 	
@@ -43,7 +43,7 @@ public class QuestraftConfiguration {
 		this.description = description;
 		
 		rewards = new LinkedList<ItemStack>();
-		goals = new LinkedList<Goal>();
+		goals = new LinkedList<GoalConfiguration>();
 		npcs = new LinkedList<NPC>();
 		
 	}
@@ -110,8 +110,23 @@ public class QuestraftConfiguration {
 		config.set("savestate", savestate);
 		config.set("fame", fame);
 		config.set("rewards", rewards);
-		config.set("goals", goals);
-		config.set("npcs", npcs);
+		
+		ConfigurationSection goalSex = config.createSection("goals");
+		
+		int i = 1;
+		if (!goals.isEmpty())
+		for (GoalConfiguration goal : goals) {
+			goalSex.set(i + "", goal.asConfig());
+			i++;
+		}
+		
+		ConfigurationSection nSex = config.createSection("npcs");
+		i = 1;
+		if (!npcs.isEmpty())
+		for (NPC npc : npcs) {
+			nSex.set(i + "", npc);
+		}
+
 		config.set("end", end.getConfiguration());
 		config.set("start", startNPC);
 		
@@ -122,6 +137,58 @@ public class QuestraftConfiguration {
 			System.err.println("Unable to save configuration file!");
 			return false;
 		}
+		
+		return true;
+	}
+	
+	/**
+	 * Loads up configuration from the passed file
+	 * @param loadFile
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public boolean load(File loadFile) {
+		
+		YamlConfiguration config = new YamlConfiguration();
+		try {
+			config.load(loadFile);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("Invalid load operation!");
+			return false;
+		}
+		
+		//go through each field and load it if it's there
+		if (config.contains("configurationversion")) {
+			this.configurationVersion = config.getDouble("configurationversion");
+		}
+		
+		if (config.contains("name")) {
+			this.questName = config.getString("name");
+		}
+		
+		if (config.contains("description")) {
+			this.description = config.getString("description");
+		}
+		
+		if (config.contains("savestate")) {
+			this.savestate = config.getBoolean("savestate");
+		}
+		
+		if (config.contains("fame")) {
+			this.fame = config.getInt("fame");
+		}
+		
+		if (config.contains("rewards")) {
+			this.rewards = (List<ItemStack>) config.getList("rewards");
+		}		
+		
+		if (config.contains("goals")) {
+			this.fame = config.getInt("fame");
+		}
+		
+		
+		
 		
 		return true;
 	}
